@@ -7,7 +7,7 @@ void main() {
 }
 
 class PageViewCustom extends StatefulWidget {
-  PageViewCustom({Key? key}) : super(key: key);
+  const PageViewCustom({Key? key}) : super(key: key);
 
   @override
   State<PageViewCustom> createState() => _PageViewCustomState();
@@ -15,116 +15,102 @@ class PageViewCustom extends StatefulWidget {
 
 class _PageViewCustomState extends State<PageViewCustom> {
   var activePage = 0;
+
   @override
   Widget build(BuildContext context) {
     var list = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
     final PageController controller = PageController();
-    return Column(
-      children: [
-        Expanded(
-          child: PageView(
-            onPageChanged: (index) {
-              setState(() {
-                activePage = index;
-              });
-            },
-            controller: controller,
-            children: const <Widget>[
-              Center(
-                child: Text('First Page'),
-              ),
-              Center(
-                child: Text('Second Page'),
-              ),
-              Center(
-                child: Text('Third Page'),
-              ),
-              Center(
-                child: Text('Four Page'),
-              ),
-              Center(
-                child: Text('Five Page'),
-              ),
-              Center(
-                child: Text('Six Page'),
-              ),
-              Center(
-                child: Text('Seven Page'),
-              ),
-              Center(
-                child: Text('Eight Page'),
-              ),
-              Center(
-                child: Text('Night Page'),
-              ),
-              Center(
-                child: Text('Ten Page'),
-              ),
-            ],
+
+    return Container(
+      child: Column(
+        children: [
+          Expanded(
+            child: PageView(
+              onPageChanged: (index) {
+                setState(() {
+                  activePage = index;
+                });
+              },
+              controller: controller,
+              children: const <Widget>[
+                Center(
+                  child: Text('First Page'),
+                ),
+                Center(
+                  child: Text('Second Page'),
+                ),
+                Center(
+                  child: Text('Third Page'),
+                ),
+                Center(
+                  child: Text('Four Page'),
+                ),
+                Center(
+                  child: Text('Five Page'),
+                ),
+                Center(
+                  child: Text('Six Page'),
+                ),
+                Center(
+                  child: Text('Seven Page'),
+                ),
+                Center(
+                  child: Text('Eight Page'),
+                ),
+                Center(
+                  child: Text('Night Page'),
+                ),
+                Center(
+                  child: Text('Ten Page'),
+                ),
+              ],
+            ),
           ),
-        ),
-        Container(
-          height: 40,
-          child: ListView.builder(
-            scrollDirection: Axis.horizontal,
-            itemBuilder: (context, index) {
-              return dotBuilder(
-                  index, activePage == index, activePage, list.length);
-            },
-            itemCount: list.length,
+          Container(
+            height: 40,
+            child: ListView.builder(
+              scrollDirection: Axis.horizontal,
+              itemBuilder: (context, index) {
+                var mapObj = caculatorSize(index, activePage, list.length);
+                return dotBuilder(mapObj);
+              },
+              itemCount: list.length,
+            ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 }
 
-Widget dotBuilder(index, isActive, activePage, lengthList) {
-  double heightCus = 5;
-  double widthCus = 5;
-  var color = Colors.yellow;
-  if(lengthList==5){
-    widthCus = 20;
-    heightCus = 20;
-  }else{
-    if(0 >= activePage && activePage <=2 ){
-      if(index>2){
-        widthCus = 5;
-        heightCus = 5;
-      }else{
-        widthCus = 20;
-        heightCus = 20;
-      }
+Map<String, dynamic> caculatorSize(index, activePage, int lengthTrue) {
+  var conditionColor = index == activePage ? Colors.blue : Colors.yellow;
+  var conditionSize = index == activePage ? 20.0 : 5.0;
 
-    }
-    if(3>=activePage && activePage<= 6){
-     widthCus = 5;
-     heightCus = 5;
-    }
-    if(7 >= activePage && activePage <=9 ){
-      if(index<7){
-        widthCus = 5;
-        heightCus = 5;
-      }else{
-        widthCus = 20;
-        heightCus = 20;
-      }
-
-    }
-
+  if (lengthTrue <= 5) {
+    return {'size': 20.0, 'color': conditionColor};
   }
-  if(isActive ){
-    widthCus = 20;
-    heightCus = 20;
-    color = Colors.blue;
+  if (0 <= activePage && activePage <= 2 && 0 <= index && index <= 2 ||
+      7 <= activePage && activePage <= 9 && 7 <= index && index <= 9) {
+    return {'size': 20.0, 'color': conditionColor};
   }
+  return {'size': conditionSize, 'color': conditionColor};
+}
+
+void handleHideDot(int lengthTrue){
+
+
+
+}
+
+Widget dotBuilder(Map<String, dynamic> value) {
   return Container(
     margin: const EdgeInsets.symmetric(horizontal: 4),
-    width: heightCus,
-    height: widthCus,
+    width: value['size'],
+    height: value['size'],
     decoration: BoxDecoration(
       shape: BoxShape.circle,
-      color: color,
+      color: value['color'],
     ),
   );
 }
